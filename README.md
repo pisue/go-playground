@@ -1,11 +1,11 @@
-# Go Playground
+# 🎈Go Playground
 
-이 저장소는 **Java Spring 개발자의 Go 언어 친해지기 프로젝트**입니다. 
-Go 언어의 특징을 익히고, Spring 프레임워크에서의 개발 경험을 Go 환경에 어떻게 녹여낼 수 있는지 실습하는 것을 목표로 합니다.
+> 이 저장소는 **Java Spring 개발자의 Go 언어 친해지기 프로젝트**입니다. 
+> Go 언어의 특징을 익히고, Spring 프레임워크에서의 개발 경험을 Go 환경에 어떻게 녹여낼 수 있는지 실습하는 것을 목표로 합니다.
 
 Go Workspaces(`go.work`)를 활용하여 여러 Go 프로젝트(`board`, `ecommerce`)를 하나의 워크스페이스에서 효율적으로 관리합니다.
 
-## 왜 Go Workspaces를 사용하나요?
+### Go Workspaces를 사용한 이유
 
 1.  **멀티 모듈 관리**: 하나의 저장소 내에서 독립된 여러 모듈(`board`, `ecommerce` 등)을 동시에 개발하기 편리합니다.
 2.  **로컬 의존성 해결**: 모듈 간의 의존성이 있을 때 `go.mod` 파일에 일일이 `replace` 구문을 추가하지 않고도 로컬에서 유연하게 참조할 수 있습니다.
@@ -16,13 +16,12 @@ Go Workspaces(`go.work`)를 활용하여 여러 Go 프로젝트(`board`, `ecomme
 - **board**: Echo 프레임워크 기반의 계층형 아키텍처(Layered Architecture) 게시판 프로젝트
 - **ecommerce**: 향후 추가 예정인 이커머스 프로젝트
 
-## 디렉토리 구조 (Board)
+## 디렉토리 구조
 
-[Standard Go Project Layout](./ARCHITECTURE.md)을 따릅니다.
-[(이 Layout은 Go 스러운가?)](./GO_IDIOMATIC_LAYOUT.md)
+Standard Go Project Layout [📙](./ARCHITECTURE.md)을 따릅니다.
+[(이 Layout은 Go 스러운가?🙄)](./GO_IDIOMATIC_LAYOUT.md)
 
 ```text
-board/
 ├── cmd/app/main.go        # 애플리케이션 진입점
 ├── internal/
 │   ├── handler/           # HTTP 요청 처리 (Controller)
