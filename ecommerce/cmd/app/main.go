@@ -1,14 +1,25 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
+
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
-	fmt.Println("Ecommerce Service Started on :8081")
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Welcome to Ecommerce Service!"))
+	// Echo instance
+	e := echo.New()
+
+	// Middleware
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+
+	// Routes
+	e.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Welcome to Ecommerce Service!")
 	})
-	http.ListenAndServe(":8081", nil)
+
+	// Start server on port 8081
+	e.Logger.Fatal(e.Start(":8081"))
 }
