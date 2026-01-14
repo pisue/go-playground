@@ -1,6 +1,7 @@
 # 🎈Go Playground
 
-> 이 저장소는 **Java Spring 개발자의 Go 언어 친해지기 프로젝트**입니다. 
+> 이 저장소는 **Java Spring 개발자의 Go 언어 친해지기 프로젝트**입니다.
+> 
 > Go 언어의 특징을 익히고, Spring 프레임워크에서의 개발 경험을 Go 환경에 어떻게 녹여낼 수 있는지 실습하는 것을 목표로 합니다.
 
 Go Workspaces(`go.work`)를 활용하여 여러 Go 프로젝트(`board`, `ecommerce`)를 하나의 워크스페이스에서 효율적으로 관리합니다.
