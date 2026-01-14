@@ -1,37 +1,59 @@
-# 🎈Go Playground
+# 🎈Java Spring Developer's `Go Playground`
 
-> 이 저장소는 **Java Spring 개발자의 Go 언어 친해지기 프로젝트**입니다.
+> 이 저장소는 Java/Spring 개발자가 Go 언어의 생태계에 적응하고,
 > 
-> Go 언어의 특징을 익히고, Spring 프레임워크에서의 개발 경험을 Go 환경에 어떻게 녹여낼 수 있는지 실습하는 것을 목표로 합니다.
+> Spring에서의 개발 경험을 Go 환경에 어떻게 'Go 스럽게' 녹여낼 수 있는지 탐구하는 실습 프로젝트입니다.
 
-Go Workspaces(`go.work`)를 활용하여 여러 Go 프로젝트(`board`, `ecommerce`)를 하나의 워크스페이스에서 효율적으로 관리합니다.
+### 🏗️ Project Architecture: Layered Approach
+본 프로젝트는 Go 커뮤니티에서 가장 널리 권장되는 **Standard Project Layout**[📙](./ARCHITECTURE.md)을 기반으로, Spring의 계층화 구조를 재해석하여 설계했습니다.
 
-### Go Workspaces를 사용한 이유
+### 폴더 구조 및 Spring 대응
+```text
+(예/board, ecommerce)/
+├── cmd/                # 서비스의 진입점 (컴파일 대상)
+│   └── app/main.go     # 애플리케이션 메인 실행 파일 및 진입점 (Spring Boot Main Class)
+├── internal/           # 외부에서 참조 불가능한 내부 핵심 로직 (**강력한 캡슐화**)
+│   ├── handler/        # Controller 역할 (HTTP/gRPC 입출력)
+│   ├── service/        # Business Logic (핵심 도메인 로직)
+│   ├── repository/     # Data Access 데이터 접근 로직 (DB, Cache)
+│   └── domain/         # 핵심 엔티티 및 인터페이스 (Entity/Domain Model)
+├── pkg/                # 외부 프로젝트에서도 재사용 가능한 유틸리티
+└── configs/            # 환경 설정 및 설정 파일
+```
 
+
+### 왜 이 구조(Standard Layout)를 선택했는가?
+실무에서는 생산성을 위해 프레임워크 지향적인 간결한 구조(예: [echo-boilerplate](https://github.com/alexferl/echo-boilerplate))를 사용하기도 하지만, 
+본 프로젝트에서는 **Go의 인터페이스 기반 설계와 명시적 의존성 주입(DI) 원리**를 깊이 있게 파악하기 위해 표준 레이어드 아키텍처를 채택했습니다. 
+이는 'Go 스러움'의 핵심인 **명확성**과 **테스트 용이성**을 확보하는 연습이기도 합니다.
+[(이 Layout은 Go 스러운가?🙄)](./GO_IDIOMATIC_LAYOUT.md)
+
+---
+
+### 🛠️ Go Workspaces (go.work) 활용
+Java의 Maven/Gradle 멀티 모듈 구조와 유사한 경험을 위해 go.work를 도입했습니다.
+
+#### Go Workspaces도입 이유
 1.  **멀티 모듈 관리**: 하나의 저장소 내에서 독립된 여러 모듈(`board`, `ecommerce` 등)을 동시에 개발하기 편리합니다.
 2.  **로컬 의존성 해결**: 모듈 간의 의존성이 있을 때 `go.mod` 파일에 일일이 `replace` 구문을 추가하지 않고도 로컬에서 유연하게 참조할 수 있습니다.
 3.  **Spring 멀티 프로젝트와 유사한 경험**: Java/Spring의 멀티 모듈 프로젝트(Maven/Gradle) 구조와 유사한 관리 환경을 제공하여 익숙한 방식으로 프로젝트를 구성할 수 있습니다.
+
+### ✍️ Spring 개발자를 위한 Go 핵심 가이드 (Read Me First)
+
+| Java / Spring | Go | 비고 |
+| --- | --- | --- |
+| **Annotation-based** | **Explicit Code** | 마법 같은 자동 설정 대신 명시적인 코드를 지향합니다. |
+| **Exceptions** | **Explicit Error Handling** | `try-catch` 대신 `if err != nil`로 에러를 값으로서 처리합니다. |
+| **Runtime Polymorphism** | **Static Duck Typing** | 인터페이스 구현을 명시하지 않아도 메서드 세트만 맞으면 성립합니다. |
+| **Maven/Gradle** | **Go Modules & Workspaces** | 의존성 관리와 멀티 모듈 관리가 더 가볍고 빠릅니다. |
+
+### 💡 Spring 개발자가 Go에서 가장 자주 하는 실수
+Go에서는 interface를 구현하는 쪽에 두지 않고, 사용하는 쪽에 두는 것이 더 권장됩니다. 예를 들어 service가 repository를 필요로 한다면, service 패키지 안에 인터페이스를 정의하는 것이 가장 'Go 스러운' 추상화 방식입니다.
 
 ## 프로젝트 구성
 
 - **board**: Echo 프레임워크 기반의 계층형 아키텍처(Layered Architecture) 게시판 프로젝트
 - **ecommerce**: 향후 추가 예정인 이커머스 프로젝트
-
-## 디렉토리 구조
-
-Standard Go Project Layout [📙](./ARCHITECTURE.md)을 따릅니다.
-[(이 Layout은 Go 스러운가?🙄)](./GO_IDIOMATIC_LAYOUT.md)
-
-```text
-├── cmd/app/main.go        # 애플리케이션 진입점
-├── internal/
-│   ├── handler/           # HTTP 요청 처리 (Controller)
-│   ├── service/           # 비즈니스 로직
-│   ├── repository/        # 데이터베이스 접근
-│   └── model/             # 구조체 정의 (Entity/DTO)
-├── pkg/utils/             # 공용 유틸리티
-└── configs/               # 설정 파일
-```
 
 ## 초기화 및 실행 방법
 
