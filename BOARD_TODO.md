@@ -1,9 +1,9 @@
 # 📋 Board Module Learning Roadmap (CRUD)
 
-이 문서는 Java Spring 개발자가 Go 언어로 간단한 게시판 CRUD를 구현하며 **'Go 스러운 사고방식'**을 익히기 위한 단계별 가이드입니다.
+이 문서는 Java Spring 개발자가 Go 언어로 간단한 게시판 CRUD를 구현하며 'Go 스러운 사고방식'을 익히기 위한 단계별 가이드입니다.
 
 ## 🎯 학습 목표
-Spring의 `@Controller`, `@Service`, `@Repository`, `@Entity` 패턴을 Go의 구조체(Struct)와 인터페이스(Interface)로 직접 구현해보며, **Magic(자동 설정)이 아닌 Explicit(명시적 코드)**의 매력을 느껴봅니다.
+Spring의 `@Controller`, `@Service`, `@Repository`, `@Entity` 패턴을 Go의 구조체(Struct)와 인터페이스(Interface)로 직접 구현해보며, Magic(자동 설정)이 아닌 Explicit(명시적 코드)의 매력을 느껴봅니다.
 
 ---
 
