@@ -50,6 +50,42 @@ Java의 Maven/Gradle 멀티 모듈 구조와 유사한 경험을 위해 go.work�
 ### 💡 Spring 개발자가 Go에서 가장 자주 하는 실수
 Go에서는 interface를 구현하는 쪽에 두지 않고, 사용하는 쪽에 두는 것이 더 권장됩니다. 예를 들어 service가 repository를 필요로 한다면, service 패키지 안에 인터페이스를 정의하는 것이 가장 'Go 스러운' 추상화 방식입니다.
 
+---
+
+## 🛡️ Go Service Pattern 에러 헨들링 아키텍처
+
+본 프로젝트는 비즈니스 로직의 독립성과 유지보수성을 위해 **에러 처리 패턴을 체계화**했습니다.
+
+### 1. 핵심 목표 (Objective)
+*   **관심사 분리 (Separation of Concerns):** Service Layer(비즈니스 로직)가 HTTP/Echo와 같은 전송 계층의 상세 구현(Status Code 등)을 알지 못하도록 격리합니다.
+*   **도메인 독립성:** `board`, `ecommerce` 등 각 도메인 내부에서 에러를 정의하여, 향후 마이크로서비스 분리 시 독립성을 보장합니다.
+
+### 2. 주요 구현 내용 (Implementation)
+
+#### A. 제네릭 도메인 에러 정의 (`internal/domain/errors.go`)
+프로토콜(HTTP, gRPC)에 종속되지 않는 추상화된 에러를 정의합니다.
+*   **Standard Errors:** `ErrBadRequest`, `ErrNotFound`, `ErrInternalFailure` 등
+*   **AppError 구조체:**
+    *   `ServiceError`: 추상화된 에러 카테고리 (로직 분기용)
+    *   `Detail`: 실제 발생한 기술적 에러 (서버 로깅용)
+    *   `Message`: 클라이언트에게 전달할 안전한 메시지 (사용자 경험)
+
+#### B. Service Layer: 에러 래핑 (Wrapping)
+서비스 메서드는 에러 발생 시 `AppError`로 래핑하여 반환합니다. 이를 통해 상위 계층에 '에러의 종류'와 '사용자 메시지'를 명확히 전달합니다.
+
+#### C. Handler Layer: 에러 번역 (Translation)
+Echo 핸들러는 `errors.As`와 `errors.Is`를 사용하여 Service에서 넘어온 에러를 적절한 HTTP 응답으로 변환합니다.
+*   `ErrBadRequest` -> HTTP 400
+*   `ErrNotFound` -> HTTP 404
+*   `ErrInternalFailure` -> HTTP 500
+
+### 3. 도입 효과 (Benefits)
+1.  **유연성:** 향후 gRPC 등 새로운 프로토콜 도입 시 Service 로직 수정 없이 Handler만 추가하면 됩니다.
+2.  **보안성:** DB 에러 등 민감한 정보를 클라이언트에 노출하지 않고, `Message` 필드를 통해 안전한 메시지만 전달합니다.
+3.  **유지보수성:** 에러 정의, 발생, 처리의 책임이 명확히 분리되어 디버깅과 확장이 용이합니다.
+
+---
+
 ## 프로젝트 구성
 
 - **board**: Echo 프레임워크 기반의 계층형 아키텍처(Layered Architecture) 게시판 프로젝트
