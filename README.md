@@ -69,7 +69,8 @@ Go에서는 interface를 구현하는 쪽에 두지 않고, 사용하는 쪽에 
 
 - **board**: Echo 프레임워크 기반의 계층형 아키텍처(Layered Architecture) 게시판 프로젝트
     - [👉 Board 모듈 개발 로드맵 (CRUD 따라하기)](./BOARD_TODO.md)
-- **ecommerce**: 향후 추가 예정인 이커머스 프로젝트
+- **ecommerce**: Echo 프레임워크 기반의 이커머스 서비스 프로젝트
+    - [👉 Ecommerce 모듈 개발 로드맵 (CRUD 따라하기)](./ECOMMERCE_TODO.md)
 
 ## 초기화 및 실행 방법
 
