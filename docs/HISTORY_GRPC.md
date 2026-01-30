@@ -82,3 +82,14 @@
 *   **구현 내용**:
     *   `gin.New()`를 통한 엔진 초기화.
     *   `:8080` 포트로 서버 바인딩.
+
+### 3.3 gRPC 환경 구축 및 초기 서비스 정의
+*   **프로토콜 버퍼(Protocol Buffers) 설정**:
+    *   Windows 및 macOS/Linux 환경을 위한 `protoc` 설치 및 Go 플러그인(`protoc-gen-go`, `protoc-gen-go-grpc`) 설정 가이드(`docs/gRPC_SETTING.md`) 작성.
+*   **AuthService 정의 (`auth.proto`)**:
+    *   인증 관련 RPC 메서드 `CreateAuth`, `VerifyAuth` 설계.
+    *   토큰 생성을 위한 데이터 구조 `AuthData` 및 응답 메시지 정의.
+*   **코드 생성**:
+    *   `protoc` 명령어를 통해 `.proto` 파일로부터 Go 소스 코드(`auth.pb.go`, `auth_grpc.pb.go`) 생성 성공.
+*   **의존성 추가**:
+    *   `grpc`, `protobuf`, `paseto` (토큰 관리), `gin` 등 핵심 라이브러리 의존성 주입.
