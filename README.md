@@ -65,12 +65,34 @@ Go에서는 interface를 구현하는 쪽에 두지 않고, 사용하는 쪽에 
 
 ---
 
-## 프로젝트 구성
+## 프로젝트 구성 및 모듈별 특징
 
-- **board**: Echo 프레임워크 기반의 계층형 아키텍처(Layered Architecture) 게시판 프로젝트
-    - [👉 Board 모듈 개발 로드맵 (CRUD 따라하기)](./BOARD_TODO.md)
-- **ecommerce**: Echo 프레임워크 기반의 이커머스 서비스 프로젝트
-    - [👉 Ecommerce 모듈 개발 로드맵 (CRUD 따라하기)](./ECOMMERCE_TODO.md)
+본 저장소는 학습 목적에 따라 두 가지 상이한 아키텍처 스타일을 유지하고 있습니다.
+
+### 1. Standard Web Service (Echo)
+- **대상 모듈**: `board`, `ecommerce`
+- **프레임워크**: [Echo](https://echo.labstack.com/)
+- **아키텍처**: Standard Layered Architecture (Controller -> Service -> Repository)
+- **특징**:
+    - 철저한 **인터페이스 기반 설계**로 느슨한 결합(Loose Coupling) 추구
+    - Spring 개발자에게 익숙한 계층 구조를 Go스럽게 재해석
+    - [👉 Board 모듈 개발 로드맵](./docs/BOARD_TODO.md) / [👉 Ecommerce 모듈 개발 로드맵](./docs/ECOMMERCE_TODO.md)
+
+### 2. gRPC Microservice (Gin + gRPC)
+- **대상 모듈**: `grpc-server`
+- **프레임워크**: [Gin](https://github.com/gin-gonic/gin) (Gateway용) + gRPC
+- **아키텍처**: Learning-oriented Layered Architecture
+- **특징**:
+    - **Protobuf** 기반의 엄격한 타입 통신 학습
+    - 구조체 포인터 주입 방식을 통한 **명시적 의존성 관리** (Clean Architecture로 넘어가기 전 단계의 학습)
+    - Paseto 토큰 인증 및 미들웨어 구현
+
+#### 📚 gRPC 학습 가이드 (Must Read)
+gRPC 모듈을 분석하기 전에 아래 문서들을 순서대로 읽어보시기를 강력 추천합니다.
+
+1. [**⚙️ gRPC 개발 환경 설정 (Windows/Mac)**](./docs/gRPC_SETTING.md): `protoc` 설치 및 환경 변수 설정법
+2. [**🧠 Go gRPC 핵심 개념 (구조체와 상태)**](./docs/GO_GRPC_CONCEPTS.md): "왜 구조체 필드와 메서드 인자를 구분할까?"에 대한 쉬운 비유
+3. [**📜 gRPC 개발 히스토리 & 아키텍처 비교**](./docs/HISTORY_GRPC.md): Board 모듈(Echo)과 gRPC 모듈(Gin)의 상세 비교 분석
 
 ## 초기화 및 실행 방법
 
