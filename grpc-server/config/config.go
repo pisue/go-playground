@@ -10,6 +10,10 @@ type Config struct {
 	Pasteo struct {
 		Key string
 	}
+
+	GRPC struct {
+		URL string
+	}
 }
 
 func NewConfig(path string) *Config {

@@ -93,3 +93,28 @@
     *   `protoc` 명령어를 통해 `.proto` 파일로부터 Go 소스 코드(`auth.pb.go`, `auth_grpc.pb.go`) 생성 성공.
 *   **의존성 추가**:
     *   `grpc`, `protobuf`, `paseto` (토큰 관리), `gin` 등 핵심 라이브러리 의존성 주입.
+
+### 3.4 gRPC 클라이언트 설계 및 상태 공유 개념 학습 (State Management)
+gRPC 서비스 호출을 담당하는 클라이언트(`client.go`)를 구현하며, **구조체 필드와 메서드 인자의 역할 분리**에 대해 깊이 있게 학습했습니다.
+
+#### A. 구조체와 설정 공유 (Context vs. State)
+초기 의문점: *"Config 포인터를 공유하면 모든 요청이 똑같은 값을 바라보게 되어 데이터가 섞이지 않을까?"*
+
+*   **해결 및 정립된 개념**:
+    *   **도구(Tools/Resources)**: `Config`, `ClientConn`(연결 객체), `PasetoMaker`(토큰 생성기) 등은 **불변(Immutable)**하거나 **공유되어야 하는 자원**입니다. 이는 `GRPCClient` 구조체의 필드로 관리하며, 포인터로 공유하여 메모리 효율과 일관성을 유지합니다.
+    *   **재료(Data/Request)**: 사용자별 요청 데이터(`Address`, `Token` 등)는 **가변(Mutable)**하며 요청마다 다릅니다. 이는 구조체 필드가 아닌 **메서드의 인자(Parameter)**로 전달되어 스택 메모리에서 처리되고 소멸합니다.
+
+#### B. 구현 내용 (`GRPCClient`)
+*   **구조체 정의**:
+    ```go
+    type GRPCClient struct {
+        client      *grpc.ClientConn        // 연결 객체 (공유)
+        authClient  auth.AuthServiceClient  // gRPC 스텁 (공유)
+        pasetoMaker *paseto.PasetoMaker     // 토큰 생성기 (공유)
+    }
+    ```
+*   **생성자 (`NewGRPCClient`)**:
+    *   `grpc.Dial`을 통해 서버와 연결을 맺고 `insecure` 옵션으로 개발 환경 통신을 설정.
+    *   `Config` 구조체를 확장하여 gRPC 서버 URL(`GRPC.URL`)을 외부 설정 파일에서 주입받도록 개선.
+*   **Paseto 모듈 개선**:
+    *   `NewPasetoMaker` 생성자의 인자를 값(`config.Config`)에서 포인터(`*config.Config`)로 변경하여 일관성 확보.
