@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/pisue/go-playground/grpc-server/config"
+	"github.com/pisue/go-playground/grpc-server/gRPC/client"
 	"github.com/pisue/go-playground/grpc-server/network"
 	"github.com/pisue/go-playground/grpc-server/repository"
 	"github.com/pisue/go-playground/grpc-server/service"
@@ -10,6 +11,7 @@ import (
 type App struct {
 	cfg *config.Config
 
+	gRPCClient *client.GRPCClient
 	service    *service.Service
 	repository *repository.Repository
 	network    *network.Network
@@ -24,7 +26,9 @@ func NewApp(cfg *config.Config) {
 		panic(err)
 	} else if a.service, err = service.NewService(cfg, a.repository); err != nil {
 		panic(err)
-	} else if a.network, err = network.NewNetwork(cfg, a.service); err != nil {
+	} else if a.gRPCClient, err = client.NewGRPCClient(cfg); err != nil {
+		panic(err)
+	} else if a.network, err = network.NewNetwork(cfg, a.service, a.gRPCClient); err != nil {
 		panic(err)
 	}
 

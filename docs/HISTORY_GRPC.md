@@ -142,3 +142,15 @@ Paseto(Platform-Agnostic SEcurity TOkens) 라이브러리를 활용하여 인증
     *   **유효성 검사**: 저장된 토큰 존재 여부 확인.
     *   **만료 관리**: `ExpireData` 기반 시간 체크 및 만료된 토큰 자동 삭제.
     *   **응답 확장**: 검증 성공 시 `SUCCESS` 상태와 함께 해당 사용자의 상세 데이터(`AuthData`)를 포함하여 반환함으로써 클라이언트 편의성 증대.
+
+### 3.7 의존성 연결 및 서버 구동 (Wiring)
+개발된 각 모듈(서버, 클라이언트, 네트워크)을 `main` 프로세스에서 하나로 연결하고 실제로 구동시키는 작업을 완료했습니다.
+
+*   **`main.go`**:
+    *   `server.NewGRPCServer`를 호출하여 gRPC 서버를 별도 고루틴으로 실행.
+    *   `1000ms` 지연 시간을 주어 서버가 완전히 준비될 때까지 대기.
+*   **`cmd/app.go` (Dependency Injection)**:
+    *   `NewApp` 생성자 내에서 `gRPCClient`를 초기화.
+    *   생성된 클라이언트 객체를 `Network` 계층으로 주입하여, HTTP 핸들러가 gRPC 클라이언트를 사용할 수 있도록 구성.
+*   **설정 및 오타 수정**:
+    *   `Pasteo` → `Paseto`로 설정 필드명 오타 수정 및 `config.toml` 파일에 실제 키 값과 gRPC 포트(`:1000`) 반영.

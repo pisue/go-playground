@@ -3,19 +3,21 @@ package network
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/pisue/go-playground/grpc-server/config"
+	"github.com/pisue/go-playground/grpc-server/gRPC/client"
 	"github.com/pisue/go-playground/grpc-server/service"
 )
 
 type Network struct {
 	cfg *config.Config
 
-	service *service.Service
+	service    *service.Service
+	gRPCClient *client.GRPCClient
 
 	engin *gin.Engine
 }
 
-func NewNetwork(cfg *config.Config, service *service.Service) (*Network, error) {
-	r := &Network{cfg: cfg, service: service, engin: gin.New()}
+func NewNetwork(cfg *config.Config, service *service.Service, gRPCClient *client.GRPCClient) (*Network, error) {
+	r := &Network{cfg: cfg, service: service, engin: gin.New(), gRPCClient: gRPCClient}
 
 	return r, nil
 }

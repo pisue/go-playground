@@ -7,7 +7,7 @@ import (
 )
 
 type Config struct {
-	Pasteo struct {
+	Paseto struct {
 		Key string
 	}
 
