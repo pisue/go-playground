@@ -7,6 +7,9 @@ import (
 )
 
 type Config struct {
+	Pasteo struct {
+		Key string
+	}
 }
 
 func NewConfig(path string) *Config {
