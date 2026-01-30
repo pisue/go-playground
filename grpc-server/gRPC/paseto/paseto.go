@@ -3,6 +3,7 @@ package paseto
 import (
 	"github.com/o1egl/paseto"
 	"github.com/pisue/go-playground/grpc-server/config"
+	auth "github.com/pisue/go-playground/grpc-server/gRPC/proto"
 )
 
 type PasetoMaker struct {
@@ -17,7 +18,7 @@ func NewPasetoMaker(cfg *config.Config) *PasetoMaker {
 	}
 }
 
-func (m *PasetoMaker) CreateNewToken() (string, error) {
+func (m *PasetoMaker) CreateNewToken(auth *auth.AuthData) (string, error) {
 	return "", nil
 }
 
