@@ -28,6 +28,6 @@ func NewApp(cfg *config.Config) {
 		panic(err)
 	}
 
-	// TODO -> start server
+	a.network.StartServer()
 
 }
