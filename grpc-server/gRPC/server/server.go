@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"errors"
 	"log"
 	"net"
 	"time"
@@ -65,12 +66,17 @@ func (s *GRPCServer) VerifyAuth(_ context.Context, req *auth.VerifyTokenReq) (*a
 	authData, ok := s.tokenVerifyMap[token]
 	if !ok {
 		res.V.Status = auth.ResponseType_FAILED
+		return res, errors.New("Not Existed At Token VerifyMap")
+	} else if err := s.pasetoMaker.VerifyToken(token); err != nil {
+		return nil, errors.New("Failed Verify Token")
 	} else if authData.ExpireData < time.Now().Unix() {
 		delete(s.tokenVerifyMap, token)
 		res.V.Status = auth.ResponseType_EXPIRED_DATE
+		return res, errors.New("Expired Time Over")
 	} else {
 		res.V.Status = auth.ResponseType_SUCCESS
 		res.V.Auth = authData
+		return res, nil
 	}
 
 	return res, nil

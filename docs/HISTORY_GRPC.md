@@ -165,3 +165,15 @@ HTTP 요청을 gRPC 서버로 중계(Proxy)하여 인증을 수행하는 미들�
     *   **결과 처리**: 검증 실패 시 `401 Unauthorized` 응답, 성공 시 `c.Next()`로 다음 로직 수행.
 *   **`getAuthToken` 유틸리티**:
     *   헤더 파싱 및 토큰 문자열 정제 로직 분리.
+
+### 3.9 전체 서비스 통합 및 인증 사이클 완성
+로그인부터 토큰 발급, 그리고 이를 이용한 보호된 API 접근까지의 전체 인증 사이클을 완성했습니다.
+
+*   **계층별 확장 (Layered Expansion)**:
+    *   **Network**: `POST /login` (로그인), `GET /verify` (검증 테스트) 엔드포인트 추가.
+    *   **Service & Repository**: gRPC 클라이언트를 통한 인증 데이터 생성(`CreateAuth`) 로직 연결.
+    *   **DI**: `Repository` 생성 시 `gRPCClient`를 주입받아 외부 gRPC 서버와의 통신을 전담하도록 구성.
+*   **서버 측 검증 강화**:
+    *   `GRPCServer.VerifyAuth` 로직에 Paseto 서명 검증(`VerifyToken`) 단계를 추가하여, 단순 메모리 맵 확인을 넘어선 이중 보안 체계 구축.
+*   **로직 정교화**:
+    *   Paseto 메서드의 인자 타입을 값(Value) 타입으로 변경하여 일관성을 확보하고, 서버 응답 시 상세 에러 메시지를 반환하도록 개선.
