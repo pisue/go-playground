@@ -154,3 +154,14 @@ Paseto(Platform-Agnostic SEcurity TOkens) 라이브러리를 활용하여 인증
     *   생성된 클라이언트 객체를 `Network` 계층으로 주입하여, HTTP 핸들러가 gRPC 클라이언트를 사용할 수 있도록 구성.
 *   **설정 및 오타 수정**:
     *   `Pasteo` → `Paseto`로 설정 필드명 오타 수정 및 `config.toml` 파일에 실제 키 값과 gRPC 포트(`:1000`) 반영.
+
+### 3.8 Gateway 역할의 미들웨어 구현 (Integration)
+HTTP 요청을 gRPC 서버로 중계(Proxy)하여 인증을 수행하는 미들웨어 패턴을 구현했습니다. 이는 API Gateway 패턴의 기초가 됩니다.
+
+*   **`verifyLogin` 미들웨어**:
+    *   Gin 핸들러 함수를 반환하는 클로저(Closure) 형태로 구현.
+    *   `Authorization` 헤더에서 Bearer 토큰 추출.
+    *   **RPC 호출**: 추출된 토큰을 `gRPCClient.VerifyAuth()` 메서드를 통해 gRPC 서버로 전달.
+    *   **결과 처리**: 검증 실패 시 `401 Unauthorized` 응답, 성공 시 `c.Next()`로 다음 로직 수행.
+*   **`getAuthToken` 유틸리티**:
+    *   헤더 파싱 및 토큰 문자열 정제 로직 분리.
