@@ -129,3 +129,16 @@ Paseto(Platform-Agnostic SEcurity TOkens) 라이브러리를 활용하여 인증
     *   `Paseto.V2.Encrypt` 메서드를 통해 토큰 데이터를 암호화하여 반환.
 *   **토큰 검증 (`VerifyToken`)**:
     *   `Paseto.V2.Decrypt` 메서드를 사용하여 입력받은 토큰을 복호화하고 서명을 검증.
+
+### 3.6 gRPC 서버 로직 및 데이터 관리 구현
+`AuthService`의 서버 측 구현체(`server.go`)를 완성하고, 인메모리 데이터를 활용한 토큰 검증 로직을 구축했습니다.
+
+*   **구조적 안정성 확보**:
+    *   `UnimplementedAuthServiceServer` 구조체를 임베딩하여 gRPC 표준 가이드라인 준수 및 하위 호환성 확보.
+    *   `tokenVerifyMap`을 통해 생성된 토큰과 사용자 데이터를 매핑하여 관리.
+*   **CreateAuth 구현**:
+    *   요청받은 `AuthData`를 서버 메모리에 저장하여 추후 검증이 가능하도록 처리.
+*   **VerifyAuth 구현 (비즈니스 로직)**:
+    *   **유효성 검사**: 저장된 토큰 존재 여부 확인.
+    *   **만료 관리**: `ExpireData` 기반 시간 체크 및 만료된 토큰 자동 삭제.
+    *   **응답 확장**: 검증 성공 시 `SUCCESS` 상태와 함께 해당 사용자의 상세 데이터(`AuthData`)를 포함하여 반환함으로써 클라이언트 편의성 증대.
