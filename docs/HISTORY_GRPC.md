@@ -75,4 +75,10 @@
 *   **Fail Fast 전략**:
     *   `cmd/app.go` 초기화 과정에서 의존성 주입 실패 시 즉시 `panic`을 발생시켜, 잘못된 상태로 서버가 켜지는 것을 방지.
 
----
+### 3.2 Web Framework 도입 (Gin)
+*   **Gin Framework 선택**:
+    *   프로젝트의 메인 규칙은 Echo를 사용하지만, 본 `grpc-server` 모듈에서는 학습 및 gRPC Gateway 역할 수행 등을 위해 **Gin Framework**를 도입했습니다.
+    *   `network/router.go`에서 `gin.Engine`을 초기화하고, `StartServer()` 메서드를 통해 HTTP 서버를 구동합니다.
+*   **구현 내용**:
+    *   `gin.New()`를 통한 엔진 초기화.
+    *   `:8080` 포트로 서버 바인딩.
